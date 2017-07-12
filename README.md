@@ -1,2 +1,2 @@
 # Lzw
-criptografia em Lzw
+Compressão de dados Lzw
