@@ -1,8 +1,10 @@
 module Lzw where 
+import Control.Monad
 data Lzw a = C [a] (Lzw a) | T Int Int (Lzw a) | End
 
+
 instance Show a => Show (Lzw a) where
-    show (C a b) = show a ++ (show b)
+    show (C a b) = filter (\x->x/='"') ((show a) ++ (show b))
     show (T a b c) = "(T" ++ (show a) ++ "," ++ (show b) ++ ")" ++ (show c)
     show (End) = ""
 
@@ -34,14 +36,13 @@ simpl a = a
 
 mineradorDeDados  [] _ = (0,0,[],[])
 mineradorDeDados (h:t) [] = (0,0,(h:[]),t)
-mineradorDeDados a b = 
-    (posicao, extensao,historico,diante)
+mineradorDeDados sera jafoi = (posicao, extensao,historico,diante)
     where
-        historico = b ++ (take extensaoUtilisavel a)
+        historico = jafoi ++ (take extensaoUtilisavel sera)
+        diante = drop extensaoUtilisavel sera
+        posicao = aux1 sera jafoi
+        extensao = aux2 sera (drop (posicao-1) jafoi) False
         extensaoUtilisavel = if extensao == 0 then 1 else extensao 
-        diante = drop extensaoUtilisavel a
-        posicao = aux1 a b
-        extensao = aux2 a (drop (posicao-1) b) False
 
 aux1 _ [] = 0
 aux1 (h1:t1) (h2:t2)
