@@ -1,7 +1,7 @@
 module Lzw where 
-import Control.Monad
-data Lzw a = C [a] (Lzw a) | T Int Int (Lzw a) | End
 
+
+data Lzw a = C [a] (Lzw a) | T Int Int (Lzw a) | End
 
 instance Show a => Show (Lzw a) where
     show (C [] b) = show b
@@ -24,26 +24,26 @@ compacta [] = C [] End
 compacta l = compactador l [] 
 
 compactador [] _ = C [] End
-compactador sera jafoi = 
+compactador sera jaFoi = 
     if posicao >= 1 && extensao > 1 then  
         T posicao extensao (simpl (compactador diante historico ))
     else 
         simpl (C [(last historico)] (compactador diante historico))
     where 
-        (posicao, extensao,historico, diante) = mineradorDeDados sera jafoi
+        (posicao, extensao,historico, diante) = mineradorDeDados sera jaFoi
                 
 simpl (C a (C b c)) = simpl (C (a++b) c) 
 simpl a = a
 
 mineradorDeDados  [] _ = (0,0,[],[])
 mineradorDeDados (h:t) [] = (0, 0, h:[], t)
-mineradorDeDados sera jafoi = (posicao, extensao, historico, diante)
+mineradorDeDados sera jaFoi = (posicao, extensao, historico, diante)
     where
-        historico = jafoi ++ (take extensaoUtilisavel sera)
-        diante = drop extensaoUtilisavel sera
-        posicao = pos sera jafoi
-        extensao = ext sera (drop (posicao-1) jafoi) False
-        extensaoUtilisavel = if extensao == 0 then 1 else extensao 
+        historico = jaFoi ++ (take extensaoUtilizavel sera)
+        diante = drop extensaoUtilizavel sera
+        posicao = pos sera jaFoi
+        extensao = ext sera (drop (posicao-1) jaFoi) False
+        extensaoUtilizavel = if extensao == 0 then 1 else extensao 
 
 pos _ [] = 0
 pos [] _ = 0
