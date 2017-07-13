@@ -6,19 +6,21 @@ instance Show a => Show (Lzw a) where
     show (T a b c) = "(T" ++ (show a) ++ "," ++ (show b) ++ ")" ++ (show c)
     show (End) = ""
 
-aux _ _ [] = [] 
-aux _ 0 _ = []
-aux 1 y (h:t) = (h:(aux 1 (y-1) t))
-aux x y (h:t) = aux (x-1) y t
+subs x y l
+    |l == [] = []
+    |y == 0 = []    
+    |x == 1 = ((head l):(subs 1 (y-1) (tail l)))
+    |otherwise = subs (x-1) y (tail l)
 
 descompacta (C comeco End) = comeco
 descompacta (C comeco (C fim End)) = comeco++fim
 descompacta (C comeco (C meio restoDaExpressao)) = descompacta (C (comeco++meio) restoDaExpressao)
-descompacta (C comeco (T x y restoDaExpressao)) = descompacta (C (comeco++(aux x y comeco)) restoDaExpressao)
+descompacta (C comeco (T x y restoDaExpressao)) = descompacta (C (comeco++(subs x y comeco)) restoDaExpressao)
  
 compacta [] = C [] End
 compacta l = compactador l [] 
-compactador [] _ = simpl (C [] End)
+
+compactador [] _ = C [] End
 compactador sera jafoi = 
     if (posicao>=1)&&(extensao>1) then  
         (T posicao extensao (simpl (compactador diante historico )))
@@ -29,13 +31,13 @@ compactador sera jafoi =
                 
 simpl (C a (C b c)) = simpl (C (a++b) c) 
 simpl a = a
- 
+
 mineradorDeDados  [] _ = (0,0,[],[])
 mineradorDeDados (h:t) [] = (0,0,(h:[]),t)
 mineradorDeDados a b = 
     (posicao, extensao,historico,diante)
     where
-        historico = b++take extensaoUtilisavel a
+        historico = b ++ (take extensaoUtilisavel a)
         extensaoUtilisavel = if extensao == 0 then 1 else extensao 
         diante = drop extensaoUtilisavel a
         posicao = aux1 a b
