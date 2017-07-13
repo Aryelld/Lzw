@@ -41,17 +41,19 @@ mineradorDeDados sera jafoi = (posicao, extensao,historico,diante)
     where
         historico = jafoi ++ (take extensaoUtilisavel sera)
         diante = drop extensaoUtilisavel sera
-        posicao = aux1 sera jafoi
-        extensao = aux2 sera (drop (posicao-1) jafoi) False
+        posicao = pos sera jafoi
+        extensao = ext sera (drop (posicao-1) jafoi) False
         extensaoUtilisavel = if extensao == 0 then 1 else extensao 
 
-aux1 _ [] = 0
-aux1 (h1:t1) (h2:t2)
-    | (h1 == h2) = 1 
-    | otherwise = 1+(aux1 (h1:t1) (t2) )
+pos _ [] = 0
+pos [] _ = 0
+pos (h1:t1) (h2:t2)
+    | (h1 == h2)&&((ext (h1:t1) (h2:t2) False)/=0)= 1 
+    | otherwise = 1+(pos (h1:t1) (t2) )
 
-aux2 [] _ _= 0
-aux2 (h1:t1) (h2:t2) bool= 
+ext [] _ _= 0
+ext _ [] _ = 0
+ext (h1:t1) (h2:t2) bool= 
     if (h1==h2)&&(bool||a/=0) then 1 + a else 0
         where
-            a = (aux2 t1 t2 (h1==h2))
+            a = (ext t1 t2 (h1==h2))
