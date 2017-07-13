@@ -4,6 +4,7 @@ data Lzw a = C [a] (Lzw a) | T Int Int (Lzw a) | End
 
 
 instance Show a => Show (Lzw a) where
+    show (C [] b) = show b
     show (C a b) = filter (\x->x/='"') ((show a) ++ (show b))
     show (T a b c) = "(T" ++ (show a) ++ "," ++ (show b) ++ ")" ++ (show c)
     show (End) = ""
